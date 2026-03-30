@@ -96,20 +96,46 @@ LangChain 核心     Agent+Tools    LangGraph 图编排     进阶 & 部署
 | 04 | [代码导读](./docs/04-code-guide.md) | 每个文件的关键行号标注，建议阅读顺序 | 入门 |
 | 05 | [进阶专题](./docs/05-advanced-topics.md) | HITL / Checkpoint / Streaming / Subgraph / Swarm / 部署 | 进阶 |
 
-### 示例代码
+### Phase 1-3: LangChain 基础 → Agent
 
-| 示例 | LangGraph 概念 | 难度 |
-|------|---------------|------|
-| [simple_chatbot.py](./examples/basic_agent/simple_chatbot.py) | StateGraph + Node + Edge 最小示例 | ★ |
-| [agent_with_tools.py](./examples/basic_agent/agent_with_tools.py) | @tool + bind_tools + 条件路由 | ★★ |
-| [conditional_flows.py](./examples/complex_workflow/conditional_flows.py) | 4 路条件分支 (add_conditional_edges) | ★★ |
-| [loops_and_iteration.py](./examples/complex_workflow/loops_and_iteration.py) | 循环迭代 + 收敛检测 + 防无限循环 | ★★★ |
-| [error_handling.py](./examples/complex_workflow/error_handling.py) | 错误恢复 + 重试 + 退避策略 | ★★★ |
-| [role_based_agents.py](./examples/multi_agent/role_based_agents.py) | Supervisor 模式: Coordinator ↔ Workers 循环 | ★★★ |
-| [message_passing.py](./examples/multi_agent/message_passing.py) | Agent 间消息总线通信 | ★★★ |
-| [file_tools.py](./examples/mcp_integration/file_tools.py) | MCP 工具定义 + StateGraph 集成 | ★★★ |
+| 步骤 | 示例 | 你将学到 | 难度 |
+|------|------|---------|------|
+| 1 | [simple_chatbot.py](./examples/basic_agent/simple_chatbot.py) | StateGraph + Node + Edge 最小可运行图 | ★ |
+| 2 | [agent_with_tools.py](./examples/basic_agent/agent_with_tools.py) | `@tool` + `bind_tools()` + 条件路由 | ★★ |
 
-**建议阅读顺序：** `simple_chatbot` → `agent_with_tools` → `conditional_flows` → `loops_and_iteration` → `role_based_agents` → `error_handling`
+### Phase 4-5: LangGraph 图编排
+
+| 步骤 | 示例 | 你将学到 | 难度 |
+|------|------|---------|------|
+| 3 | [conditional_flows.py](./examples/complex_workflow/conditional_flows.py) | 4 路条件分支 `add_conditional_edges` | ★★ |
+| 4 | [loops_and_iteration.py](./examples/complex_workflow/loops_and_iteration.py) | 循环迭代 + 收敛检测 + 防无限循环 | ★★★ |
+| 5 | [error_handling.py](./examples/complex_workflow/error_handling.py) | 错误恢复 + 重试 + 指数退避 | ★★★ |
+| 6 | [role_based_agents.py](./examples/multi_agent/role_based_agents.py) | Supervisor 模式: Coordinator ↔ Workers 循环 | ★★★ |
+| 7 | [message_passing.py](./examples/multi_agent/message_passing.py) | Agent 间消息总线通信 | ★★★ |
+| 8 | [file_tools.py](./examples/mcp_integration/file_tools.py) | MCP 工具定义 + StateGraph 集成 | ★★★ |
+| 9 | [demo.py](./demo.py) | 完整多 Agent 工作流系统 | ★★★★ |
+
+### Phase 6: 进阶 → 生产 ([进阶专题文档](./docs/05-advanced-topics.md))
+
+| 专题 | 核心能力 | 关键 API | 难度 |
+|------|---------|---------|------|
+| Human-in-the-Loop | 暂停图执行，等待人类审批/编辑后恢复 | `interrupt()` / `Command(resume=...)` | ★★★ |
+| Checkpoint & Memory | 会话持久化 + 跨线程长期记忆 + 时间旅行 | `MemorySaver` / `PostgresSaver` / `Store` | ★★★ |
+| Streaming | 逐 token 流式输出，实时显示 Agent 思考过程 | `stream_mode` / `astream_events()` | ★★★ |
+| Subgraph | 将复杂图拆分为可复用模块，像函数一样组合 | 子图嵌套 / State 转换 / 中断冒泡 | ★★★★ |
+| 多 Agent 进阶 | 动态并行 + Agent 自主交接 | `Send` (Map-Reduce) / `Command(goto=)` / Swarm | ★★★★ |
+| 部署 | 将 Agent 部署为生产 API 服务 | `langgraph.json` / `langgraph dev` / Docker | ★★★★ |
+
+**实践建议：**
+
+```
+Step 1  给 simple_chatbot 加 MemorySaver        → 理解 Checkpoint
+Step 2  给 agent_with_tools 加 interrupt()      → 理解 HITL
+Step 3  给任意示例加 stream_mode="messages"       → 理解 Streaming
+Step 4  把 orchestrator 的审核流程拆为 Subgraph   → 理解子图
+Step 5  用 Send 实现并行任务分发                   → 理解 Map-Reduce
+Step 6  用 langgraph-swarm 构建自主协作 Agent     → 理解 Swarm
+```
 
 ---
 

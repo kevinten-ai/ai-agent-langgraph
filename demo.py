@@ -67,12 +67,14 @@ async def demo_workflow():
                 # 显示执行摘要
                 summary = result.get("execution_summary", {})
                 if summary:
-                    print("\n📊 执行摘要:"                    print(f"  - 任务类型: {summary.get('task_type', 'N/A')}")
+                    print("\n📊 执行摘要:")
+                    print(f"  - 任务类型: {summary.get('task_type', 'N/A')}")
                     print(f"  - 执行状态: {summary.get('execution_status', 'N/A')}")
                     print(f"  - 审核分数: {summary.get('review_score', 'N/A')}")
                     print(f"  - 重试次数: {summary.get('retry_count', 0)}")
                     print(f"  - 工具调用: {summary.get('tool_calls', 0)}")
-                    print(".2f"            else:
+                    print(f"  - 执行时长: {summary.get('execution_time', 0):.2f}秒")
+            else:
                 print(f"❌ 执行失败: {result.get('error', '未知错误')}")
 
             print("\n" + "=" * 60)

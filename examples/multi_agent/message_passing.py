@@ -367,7 +367,8 @@ def demonstrate_message_passing():
                 print(f"{status} {msg['sender']} -> {msg['receiver']}: {msg['message_type']}")
 
             if result.get("final_result"):
-                print("\n📋 最终报告:"                print("-" * 40)
+                print("\n📋 最终报告:")
+                print("-" * 40)
                 print(result["final_result"])
 
             print("\n✅ 协作完成！")

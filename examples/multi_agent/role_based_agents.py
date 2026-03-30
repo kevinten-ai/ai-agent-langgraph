@@ -310,11 +310,13 @@ def run_multi_agent_collaboration():
             })
 
             # 显示结果
-            print("\n📊 执行过程:"            for msg in result["messages"]:
+            print("\n📊 执行过程:")
+            for msg in result["messages"]:
                 if isinstance(msg, AIMessage):
                     print(f"🤖 {msg.content}")
 
-            print("\n📋 最终报告:"            print("-" * 40)
+            print("\n📋 最终报告:")
+            print("-" * 40)
             print(result["final_report"])
 
             print("\n✅ 任务完成！")

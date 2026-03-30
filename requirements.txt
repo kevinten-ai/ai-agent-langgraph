@@ -1,34 +1,28 @@
-# Core dependencies
-langgraph>=0.2.0
-langchain-openai>=0.1.0
-langchain-core>=0.2.0
-langchain-community>=0.2.0
-pydantic>=2.0.0
-python-dotenv>=1.0.0
+# ============================================================
+# LangChain & LangGraph 学习项目依赖
+# ============================================================
 
-# Async and HTTP
-aiohttp>=3.9.0
-asyncio-mqtt>=0.13.0
+# --- 核心依赖 (必须安装) ---
+langgraph>=0.2.0              # LangGraph 图编排框架
+langchain-core>=0.2.0         # LangChain 核心抽象 (Runnable, LCEL, Messages)
+langchain-openai>=0.1.0       # OpenAI 集成 (ChatOpenAI)
+langchain-community>=0.2.0    # 社区集成 (DocumentLoaders, VectorStores)
+pydantic>=2.0.0               # 数据模型验证 (State 定义)
+python-dotenv>=1.0.0          # 环境变量管理
 
-# Development tools
-pytest>=7.0.0
-pytest-asyncio>=0.21.0
-black>=23.0.0
-mypy>=1.0.0
-pre-commit>=3.0.0
+# --- 网络 (MCP 客户端需要) ---
+aiohttp>=3.9.0                # 异步 HTTP 客户端
+requests>=2.31.0              # 同步 HTTP 客户端
 
-# Utilities
-requests>=2.31.0
-typing-extensions>=4.5.0
+# --- 开发工具 ---
+pytest>=7.0.0                 # 测试框架
+pytest-asyncio>=0.21.0        # 异步测试支持
 
-# Optional: Data processing
-pandas>=2.0.0
-numpy>=1.24.0
+# --- 可选: RAG 学习 (Phase 2) ---
+# faiss-cpu>=1.7.0            # 向量检索 (取消注释以启用)
+# chromadb>=0.4.0             # 向量数据库 (取消注释以启用)
+# langchain-text-splitters     # 文本分割器
 
-# Optional: Vector databases
-faiss-cpu>=1.7.0
-chromadb>=0.4.0
-
-# Optional: Monitoring
-opentelemetry-distro>=0.40b0
-opentelemetry-exporter-jaeger>=1.21.0
+# --- 可选: 数据处理 ---
+# pandas>=2.0.0               # 数据分析
+# numpy>=1.24.0               # 数值计算

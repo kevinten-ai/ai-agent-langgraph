@@ -109,6 +109,8 @@ supervisor = create_supervisor(model, [agent_a, agent_b, agent_c])
 
 ### 工作流图
 
+![本项目工作流](./images/07-project-workflow.png)
+
 ```
 START
   │

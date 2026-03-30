@@ -4,6 +4,8 @@
 
 ## 一、为什么需要 LangGraph
 
+![LangChain LCEL vs LangGraph](./images/04-langchain-vs-langgraph.png)
+
 LangChain 的 LCEL 是**线性管道** —— 数据从左流到右：
 
 ```
@@ -17,6 +19,8 @@ prompt → model → parser     （LCEL：单向，无法回头）
 - **持久化**：保存状态，跨会话恢复
 
 LangGraph 用**有向图**解决这些问题：
+
+![LangGraph StateGraph](./images/03-langgraph-stategraph.png)
 
 ```
          ┌──────────┐
@@ -303,6 +307,8 @@ app.invoke(Command(resume="yes"), config=config)
 ### 2. 多智能体模式
 
 #### Supervisor 模式（本项目采用）
+
+![Supervisor Pattern](./images/05-supervisor-pattern.png)
 
 一个中央调度 Agent 分配任务给 Worker：
 

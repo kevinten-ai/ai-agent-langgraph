@@ -4,6 +4,8 @@
 
 ## 一、分层架构
 
+![LangChain 分层架构](./images/01-langchain-architecture.png)
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │               你的应用 (Application)                  │
@@ -200,6 +202,8 @@ result = structured_model.invoke("评价一下《盗梦空间》")
 
 ### 5. LCEL — 管道组合
 
+![LCEL 管道概念](./images/02-lcel-pipeline.png)
+
 LangChain Expression Language 用 `|` 管道符组合 Runnable：
 
 ```python
@@ -251,6 +255,8 @@ for chunk in chain.stream({"question": "解释量子计算"}):
 ---
 
 ## 三、RAG 检索增强生成
+
+![RAG Pipeline](./images/06-rag-pipeline.png)
 
 RAG (Retrieval-Augmented Generation) 是 LangChain 最重要的应用模式之一：
 

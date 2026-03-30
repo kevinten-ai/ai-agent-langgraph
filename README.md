@@ -4,6 +4,8 @@
 
 ## 框架定位
 
+![LangChain vs LangGraph](./docs/images/04-langchain-vs-langgraph.png)
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   你的 AI 应用                        │

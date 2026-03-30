@@ -2,31 +2,92 @@
 
 基于 LangGraph 框架的 AI Agent 学习项目，从 LangChain 基础到 LangGraph 多智能体系统的完整学习路线。
 
+---
+
 ## 框架定位
+
+### LangChain vs LangGraph
 
 ![LangChain vs LangGraph](./docs/images/04-langchain-vs-langgraph.png)
 
+**核心关系：** LangChain 解决"调用 LLM"，LangGraph 解决"控制 LLM"。两者共享 `langchain-core` 基础设施，不是替代关系，而是从简单到复杂的连续谱。
+
+### LangChain 分层架构
+
+![LangChain 分层架构](./docs/images/01-langchain-architecture.png)
+
 ```
-┌─────────────────────────────────────────────────────┐
-│                   你的 AI 应用                        │
-│                                                     │
-│   简单场景: LangChain LCEL       复杂场景: LangGraph   │
-│   prompt | model | parser      StateGraph 有向图编排  │
-│   (线性管道)                     (循环 + 分支 + 持久化) │
-│                                                     │
-│                 ┌───────────────────┐                │
-│                 │   langchain-core   │                │
-│                 │ Runnable │ LCEL   │                │
-│                 │ Model │ Tool     │                │
-│                 └───────────────────┘                │
-│                 ┌───────────────────┐                │
-│                 │ Provider 集成层    │                │
-│                 │ OpenAI │ Anthropic│                │
-│                 └───────────────────┘                │
-└─────────────────────────────────────────────────────┘
+langchain-core        ← 基础抽象层 (Runnable, LCEL, 基类)
+├── langchain         ← 高级 API (chains, agents, middleware)
+├── langchain-openai  ← OpenAI 集成
+├── langchain-anthropic ← Anthropic 集成
+└── langgraph         ← 图编排框架
 ```
 
-**核心关系：** LangChain 解决"调用 LLM"，LangGraph 解决"控制 LLM"。两者共享 `langchain-core` 基础设施，不是替代关系，而是从简单到复杂的连续谱。
+### LCEL 管道组合
+
+![LCEL Pipeline](./docs/images/02-lcel-pipeline.png)
+
+```python
+# LangChain 最核心的范式：用 | 管道符组合组件
+chain = prompt | model | parser
+result = chain.invoke({"question": "什么是装饰器"})
+```
+
+---
+
+## LangGraph 核心概念
+
+### StateGraph — 有向图
+
+![LangGraph StateGraph](./docs/images/03-langgraph-stategraph.png)
+
+```python
+# 节点做事，边决定流向
+graph = StateGraph(State)
+graph.add_node("agent", agent_fn)
+graph.add_node("tools", tool_fn)
+graph.add_edge(START, "agent")
+graph.add_conditional_edges("agent", route_fn)  # 条件路由
+graph.add_edge("tools", "agent")                # 循环回到 agent
+app = graph.compile()
+```
+
+### RAG 检索增强生成
+
+![RAG Pipeline](./docs/images/06-rag-pipeline.png)
+
+```
+文档加载 → 文本分割 → 向量嵌入 → 存入向量库 → 检索 + LLM 生成回答
+```
+
+### 多 Agent — Supervisor 模式
+
+![Supervisor Pattern](./docs/images/05-supervisor-pattern.png)
+
+一个中央 Supervisor 分配任务给专业 Worker，Worker 完成后结果回到 Supervisor 决定下一步。
+
+---
+
+## 本项目工作流
+
+![本项目工作流](./docs/images/07-project-workflow.png)
+
+```
+START → task_assigner → tool_selector ──┬── mcp_executor → executor → reviewer ──┬── END
+                                        │                                        │
+                                        └── executor ────────────────────────────│
+                                                                                 │
+                                                          retry (< 6分 且 < 2次) ─┘
+```
+
+**关键 LangGraph 模式体现：**
+- **StateGraph**: `AgentState` (Pydantic) 定义共享状态
+- **条件路由**: `_should_use_mcp()` 决定走 MCP 还是直接执行
+- **循环**: `_should_retry()` 审核不通过则重试
+- **归约器**: `debug_logs` 和 `error_messages` 使用 `operator.add` 追加
+
+---
 
 ## 学习文档
 
@@ -38,6 +99,8 @@
 | [架构总览](./docs/03-architecture-overview.md) | 两者关系、选型指南、本项目架构解析 |
 | [代码导读](./docs/04-code-guide.md) | 每个文件的关键行号标注，建议阅读顺序 |
 
+---
+
 ## 项目结构
 
 ```
@@ -46,7 +109,9 @@ ai-agent-langgraph/
 │   ├── 00-learning-roadmap.md     # 学习路线总览
 │   ├── 01-langchain-core.md       # LangChain 核心概念
 │   ├── 02-langgraph-core.md       # LangGraph 核心概念
-│   └── 03-architecture-overview.md # 架构总览
+│   ├── 03-architecture-overview.md # 架构总览
+│   ├── 04-code-guide.md           # 代码导读
+│   └── images/                    # 学习图示
 ├── src/                           # 源代码（多 Agent 工作流系统）
 │   ├── models/                    # 状态模型定义
 │   │   ├── base.py                #   基础模型 (Task, ExecutionResult...)
@@ -82,21 +147,7 @@ src/mcp/                    → Phase 3: 工具注册/选择/执行
 src/utils/state_manager.py  → Phase 4: 状态持久化
 ```
 
-## 本项目工作流
-
-```
-START → task_assigner → tool_selector ──┬── mcp_executor → executor → reviewer ──┬── END
-                                        │                                        │
-                                        └── executor ────────────────────────────│
-                                                                                 │
-                                                          retry (< 6分 且 < 2次) ─┘
-```
-
-**关键 LangGraph 模式体现：**
-- **StateGraph**: `AgentState` (Pydantic) 定义共享状态
-- **条件路由**: `_should_use_mcp()` 决定走 MCP 还是直接执行
-- **循环**: `_should_retry()` 审核不通过则重试
-- **归约器**: `debug_logs` 和 `error_messages` 使用 `operator.add` 追加
+---
 
 ## 快速开始
 

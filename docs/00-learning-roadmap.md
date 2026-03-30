@@ -104,6 +104,19 @@ LangChain 核心    RAG 检索增强     LangChain Agent   LangGraph 基础    L
     └── orchestrator.py             ← Phase 4+5: StateGraph + 条件路由 + 多Agent
 ```
 
+## 进阶专题
+
+> 详见 [进阶专题](./05-advanced-topics.md)，覆盖生产级 Agent 的 6 大必备能力。
+
+| 专题 | 核心能力 | 难度 |
+|------|---------|------|
+| Human-in-the-Loop | `interrupt()` 动态中断 + `Command(resume=...)` 恢复 | 中 |
+| Checkpoint & Memory | MemorySaver/PostgresSaver + Store 跨线程记忆 | 中 |
+| Streaming | stream_mode + astream_events 逐 token 流式 | 中 |
+| Subgraph | 子图嵌套 + State 转换 + 中断冒泡 | 高 |
+| Advanced Multi-Agent | Command/Send/Swarm 模式 | 高 |
+| Deployment | langgraph.json + Server API + 生产部署 | 高 |
+
 ## 代码阅读顺序
 
 > 详见 [代码导读](./04-code-guide.md)，含每个文件的关键行号标注。

@@ -98,6 +98,7 @@ START → task_assigner → tool_selector ──┬── mcp_executor → execu
 | [LangGraph 核心概念](./docs/02-langgraph-core.md) | StateGraph、Node、Edge、Reducer、Checkpoint、HITL、多 Agent |
 | [架构总览](./docs/03-architecture-overview.md) | 两者关系、选型指南、本项目架构解析 |
 | [代码导读](./docs/04-code-guide.md) | 每个文件的关键行号标注，建议阅读顺序 |
+| [进阶专题](./docs/05-advanced-topics.md) | HITL、Checkpoint、Streaming、Subgraph、Swarm、部署 |
 
 ---
 

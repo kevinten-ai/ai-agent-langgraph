@@ -18,6 +18,16 @@ requests>=2.31.0              # 同步 HTTP 客户端
 pytest>=7.0.0                 # 测试框架
 pytest-asyncio>=0.21.0        # 异步测试支持
 
+# --- 进阶: Checkpoint 持久化 (Phase 6) ---
+# langgraph-checkpoint-sqlite   # SQLite Checkpointer (取消注释以启用)
+# langgraph-checkpoint-postgres # PostgreSQL Checkpointer (取消注释以启用)
+
+# --- 进阶: Swarm 多 Agent (Phase 6) ---
+# langgraph-swarm              # Swarm 模式库 (取消注释以启用)
+
+# --- 进阶: 部署 (Phase 6) ---
+# langgraph-cli                # LangGraph CLI (langgraph dev 命令)
+
 # --- 可选: RAG 学习 (Phase 2) ---
 # faiss-cpu>=1.7.0            # 向量检索 (取消注释以启用)
 # chromadb>=0.4.0             # 向量数据库 (取消注释以启用)

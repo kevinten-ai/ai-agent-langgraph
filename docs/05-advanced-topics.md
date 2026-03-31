@@ -6,6 +6,8 @@
 
 ## 一、Human-in-the-Loop (人机交互)
 
+![Human-in-the-Loop Pattern](./images/08-human-in-the-loop.png)
+
 > 让 Agent 在关键步骤暂停，等待人类审批、编辑或输入后再继续。
 
 ### 1.1 两种机制对比
@@ -108,6 +110,8 @@ def step_by_step(state):
 
 ## 二、Checkpointing 与 Memory
 
+![Checkpoint & Memory](./images/09-checkpoint-memory.png)
+
 > Checkpoint 是 LangGraph 的"存档点"机制，让图执行可以暂停、恢复、回滚。
 
 ### 2.1 Checkpointer 类型
@@ -206,6 +210,8 @@ def my_node(state, config, *, store):
 
 ## 三、Streaming (流式输出)
 
+![Streaming Modes](./images/10-streaming-modes.png)
+
 > 让用户实时看到 Agent 的思考过程和输出，而不是等到全部完成。
 
 ### 3.1 Stream Modes
@@ -282,6 +288,8 @@ astream_events()                → 执行级别的事件流，适合复杂 Agen
 ---
 
 ## 四、Subgraph (子图)
+
+![Subgraph Composition](./images/11-subgraph.png)
 
 > 将复杂图拆分为可复用的模块，像函数一样组合。
 
@@ -379,6 +387,8 @@ result = parent_app.invoke(
 ---
 
 ## 五、Advanced Multi-Agent (高级多智能体)
+
+![Swarm Pattern](./images/12-swarm-pattern.png)
 
 ### 5.1 Command — 节点级路由控制
 
@@ -506,6 +516,8 @@ def transfer_to_writer(task_description: str, state: Annotated[dict, InjectedSta
 ---
 
 ## 六、部署 (LangGraph Platform)
+
+![LangGraph Deployment](./images/13-deployment.png)
 
 ### 6.1 本地开发服务器
 

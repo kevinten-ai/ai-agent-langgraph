@@ -425,4 +425,8 @@ class MultiAgentWorkflow:
         return False
 
 
+def get_graph():
+    """LangGraph Server 入口工厂函数"""
+    workflow = MultiAgentWorkflow()
+    return workflow.app
 

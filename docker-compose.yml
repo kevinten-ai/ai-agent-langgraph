@@ -1,0 +1,92 @@
+# ================================================
+# LangGraph 学习项目 - Docker Compose 部署配置
+# 适用于: 本地学习、自托管 Lite、轻量演示
+# 一键启动: docker-compose up --build
+# ================================================
+
+version: "3.8"
+
+services:
+  # -------------------------------
+  # Redis - 用于平台缓存和消息队列
+  # -------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: langgraph-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 1s
+      retries: 5
+
+  # -------------------------------
+  # PostgreSQL - 用于 Checkpointer 持久化
+  # -------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: langgraph-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: langgraph
+      POSTGRES_USER: langgraph
+      POSTGRES_PASSWORD: langgraph
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langgraph -d langgraph"]
+      interval: 5s
+      timeout: 1s
+      retries: 5
+      start_period: 10s
+
+  # -------------------------------
+  # LangGraph 应用服务
+  # -------------------------------
+  langgraph-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: langgraph-api
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+    env_file:
+      - ./config/.env
+    environment:
+      # 基础 LangGraph / LangSmith 配置
+      LANGGRAPH_API_URL: "http://0.0.0.0:8123"
+      # Redis 连接（用于平台缓存）
+      REDIS_URI: "redis://redis:6379/0"
+      # Postgres 连接（用于持久化）
+      POSTGRES_URI: "postgresql://langgraph:langgraph@postgres:5432/langgraph?sslmode=disable"
+      # 开发模式关闭复杂跟踪
+      LANGCHAIN_TRACING_V2: "false"
+    volumes:
+      # 开发时热重载代码
+      - ./src:/app/src
+      - ./config:/app/config
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8123/ok || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    command: >
+      langgraph dev
+      --host 0.0.0.0
+      --port 8123
+      --no-browser
+
+volumes:
+  postgres_data:
+    driver: local

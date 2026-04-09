@@ -1,18 +1,19 @@
-# LangChain & LangGraph 学习路线
+# Agent Platform 学习路线
 
-> 从核心抽象到多智能体系统的系统化学习路线
+> 从核心抽象到多智能体系统，再到生产级 Agent Platform 的完整学习路线
 
 ## 总览
 
 ```
-Phase 1          Phase 2         Phase 3          Phase 4          Phase 5          Phase 6
-LangChain 核心    RAG 检索增强     LangChain Agent   LangGraph 基础    LangGraph 进阶    实战项目
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│ Runnable  │    │ Document │    │ Tools    │    │ State    │    │ HITL     │    │ Chatbot  │
-│ ChatModel │───▶│ Embed    │───▶│ Agent    │───▶│ Node     │───▶│ Multi-   │───▶│ RAG App  │
-│ LCEL     │    │ Vector   │    │ Struct   │    │ Edge     │    │  Agent   │    │ Multi-   │
-│ Prompt   │    │ Retrieve │    │ Output   │    │ Check    │    │ SubGraph │    │  Agent   │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+Phase 1          Phase 2         Phase 3          Phase 4          Phase 5          Phase 6            Phase 7              Phase 8            Phase 9
+LangChain 核心    RAG 检索增强     LangChain Agent   LangGraph 基础    LangGraph 进阶    实战项目             可观测性              评估体系             生产部署
+┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ Runnable  │    │ Document │    │ Tools    │    │ State    │    │ HITL     │    │ Chatbot  │    │ LangSmith    │    │ RAGAS        │    │ langgraph    │
+│ ChatModel │───▶│ Embed    │───▶│ Agent    │───▶│ Node     │───▶│ Multi-   │───▶│ RAG App  │───▶│ OpenTelemetry│───▶│ Custom Eval  │───▶│ Docker / K8s │
+│ LCEL     │    │ Vector   │    │ Struct   │    │ Edge     │    │  Agent   │    │ Multi-   │    │ Node Metrics │    │ CI Dataset   │    │ Server API   │
+│ Prompt   │    │ Retrieve │    │ Output   │    │ Check    │    │ SubGraph │    │  Agent   │    │ Structured   │    │ Threshold    │    │ Cloud        │
+└──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘    │ Logs         │    │ Pipeline     │    │              │
+                                                                                                 └──────────────┘    └──────────────┘    └──────────────┘
 ```
 
 ## Phase 1 — LangChain 核心基础
@@ -84,6 +85,39 @@ LangChain 核心    RAG 检索增强     LangChain Agent   LangGraph 基础    L
 | 02-rag-app | 文档问答系统 | RAG 全链路 + Agent 工具集成 |
 | 03-multi-agent | 多智能体协作系统 | Supervisor + Subgraph + Checkpoint |
 
+## Phase 7 — Agent 可观测性
+
+> 📖 详细文档：[Agent 可观测性](./07-agent-observability.md)
+
+| 模块 | 主题 | 核心知识点 | 对应示例 |
+|------|------|-----------|---------|
+| 01-langsmith | 自动追踪 | `LANGCHAIN_TRACING_V2`, `LANGCHAIN_PROJECT`, Run Tree | `examples/platform/langsmith_tracing.py` |
+| 02-astream-events | 结构化日志 | `astream_events`, 节点耗时/Token 统计 | `examples/advanced/streaming_output.py` |
+| 03-opentelemetry | OpenTelemetry 集成 | `TracerProvider`, `ConsoleSpanExporter`, 手动埋点 | `examples/platform/opentelemetry_tracing.py` |
+| 04-custom-metrics | 自定义指标 | 节点级吞吐/延迟/错误率统计 | `examples/platform/opentelemetry_tracing.py` |
+
+## Phase 8 — Agent 评估体系
+
+> 📖 详细文档：[Agent 评估体系](./08-agent-evaluation.md)
+
+| 模块 | 主题 | 核心知识点 | 对应示例 |
+|------|------|-----------|---------|
+| 01-ragas | 端到端 RAG 评估 | `faithfulness`, `answer_relevancy`, `context_relevancy` | `examples/platform/ragas_evaluation.py` |
+| 02-custom-eval | 自定义 Eval Pipeline | 轨迹评分、工具正确性、JSON 格式、引用检测 | `examples/platform/custom_eval_pipeline.py` |
+| 03-node-assertions | 节点级断言 | State 中间状态校验、边界条件测试 | `tests/` (pytest) |
+| 04-ci-integration | CI 集成 | 数据集 + 阈值 + 回归测试 |
+
+## Phase 9 — 生产部署
+
+> 📖 详细文档：[生产部署实战](./09-production-deployment.md)
+
+| 模块 | 主题 | 核心知识点 | 对应配置 |
+|------|------|-----------|---------|
+| 01-langgraph-json | 服务入口 | `langgraph.json` 配置，`get_graph()` 工厂函数 | `langgraph.json` |
+| 02-local-dev | 本地开发 | `langgraph dev`, `langgraph up`, Docker Desktop | `Dockerfile` |
+| 03-self-host | 自托管 | Docker Compose (API + Postgres + Redis), 健康检查 | `docker-compose.yml` |
+| 04-cloud | 云平台 | LangGraph Cloud, Server API, 自动扩缩容 | — |
+
 ## 本项目代码与学习路线的映射
 
 ```
@@ -102,6 +136,13 @@ LangChain 核心    RAG 检索增强     LangChain Agent   LangGraph 基础    L
 │   └── state_manager.py            ← Phase 4: 状态持久化
 └── workflow/
     └── orchestrator.py             ← Phase 4+5: StateGraph + 条件路由 + 多Agent
+
+平台能力示例 examples/platform/       对应学习阶段
+├── langsmith_tracing.py            ← Phase 7: LangSmith 自动追踪
+├── opentelemetry_tracing.py        ← Phase 7: OpenTelemetry 手动埋点
+├── ragas_evaluation.py             ← Phase 8: RAGAS 自动评估
+├── custom_eval_pipeline.py         ← Phase 8: 自定义 Eval Pipeline
+└── langgraph_server/               ← Phase 9: LangGraph Server 部署配置
 ```
 
 ## 进阶专题
@@ -117,6 +158,17 @@ LangChain 核心    RAG 检索增强     LangChain Agent   LangGraph 基础    L
 | Advanced Multi-Agent | Command/Send/Swarm 模式 | 高 |
 | Deployment | langgraph.json + Server API + 生产部署 | 高 |
 
+## Agent Platform 能力矩阵
+
+> 从零到生产，Agent 系统还需要以下平台级能力：
+
+| 专题 | 文档 | 核心能力 | 难度 |
+|------|------|---------|------|
+| Observability | [07-agent-observability.md](./07-agent-observability.md) | LangSmith 自动追踪 + OpenTelemetry 手动埋点 + Node Metrics | 中 |
+| Evaluation | [08-agent-evaluation.md](./08-agent-evaluation.md) | RAGAS 指标 + 自定义 Eval Pipeline + CI 数据集回归 | 中高 |
+| Production Deployment | [09-production-deployment.md](./09-production-deployment.md) | `langgraph dev` / Docker Compose 自托管 / LangGraph Cloud | 中高 |
+
+
 ## 代码阅读顺序
 
 > 详见 [代码导读](./04-code-guide.md)，含每个文件的关键行号标注。
@@ -130,6 +182,9 @@ LangChain 核心    RAG 检索增强     LangChain Agent   LangGraph 基础    L
 
 深入:
   src/models/states.py → src/workflow/orchestrator.py → src/agents/ → src/mcp/
+
+平台能力:
+  langsmith_tracing.py → opentelemetry_tracing.py → ragas_evaluation.py → custom_eval_pipeline.py → langgraph_server/
 ```
 
 ## 推荐学习资源

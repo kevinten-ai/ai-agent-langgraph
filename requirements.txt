@@ -33,6 +33,16 @@ pytest-asyncio>=0.21.0        # 异步测试支持
 # chromadb>=0.4.0             # 向量数据库 (取消注释以启用)
 # langchain-text-splitters     # 文本分割器
 
+# --- 平台能力: 可观测性 (Phase 7) ---
+# opentelemetry-api>=1.24.0   # OpenTelemetry 核心 API
+# opentelemetry-sdk>=1.24.0   # OpenTelemetry SDK
+# opentelemetry-exporter-otlp>=1.24.0  # OTLP 导出器
+
+# --- 平台能力: 评估 (Phase 8) ---
+# ragas>=0.1.0                # RAGAS 自动评估框架
+# datasets>=2.14.0            # HuggingFace Datasets (Ragas 依赖)
+# faiss-cpu>=1.7.0            # 向量检索 (RAG 与评估示例需要)
+
 # --- 可选: 数据处理 ---
 # pandas>=2.0.0               # 数据分析
 # numpy>=1.24.0               # 数值计算

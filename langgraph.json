@@ -1,0 +1,13 @@
+{
+  "dependencies": [
+    "."
+  ],
+  "graphs": {
+    "agent": "./src/workflow/orchestrator.py:get_graph"
+  },
+  "env": "./config/.env",
+  "python_version": "3.11",
+  "pip_config": {
+    "extra_index_urls": []
+  }
+}

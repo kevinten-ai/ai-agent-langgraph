@@ -25,6 +25,7 @@ config/.env
 
 # Data and state
 data/
+.langgraph_api/
 *.db
 *.sqlite3
 

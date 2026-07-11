@@ -3,7 +3,7 @@
     "."
   ],
   "graphs": {
-    "agent": "./src/workflow/orchestrator.py:get_graph"
+    "agent": "src.workflow.orchestrator:get_graph"
   },
   "env": "./config/.env",
   "python_version": "3.11",

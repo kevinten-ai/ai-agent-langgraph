@@ -4,8 +4,6 @@
 # 一键启动: docker-compose up --build
 # ================================================
 
-version: "3.8"
-
 services:
   # -------------------------------
   # Redis - 用于平台缓存和消息队列
@@ -56,7 +54,8 @@ services:
     ports:
       - "8123:8123"
     env_file:
-      - ./config/.env
+      - path: ./config/.env
+        required: false
     environment:
       # 基础 LangGraph / LangSmith 配置
       LANGGRAPH_API_URL: "http://0.0.0.0:8123"
@@ -76,7 +75,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:8123/ok || exit 1"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8123/ok', timeout=2)"]
       interval: 10s
       timeout: 3s
       retries: 5

@@ -192,7 +192,7 @@ ai-agent-langgraph/
 │   ├── mcp_integration/           # MCP 集成 (file tools)
 │   ├── advanced/                  # 进阶 (checkpoint/HITL/streaming/subgraph/swarm)
 │   └── platform/                  # 平台能力 (观测/评估/部署)
-├── config/                        # 配置 (env.example)
+├── config/                        # 配置 (.env.example)
 ├── demo.py                        # 完整系统演示
 ├── langgraph.json                 # LangGraph Server 入口配置
 ├── Dockerfile                     # 多阶段构建
